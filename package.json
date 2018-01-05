@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Onisoroma/ARRoomsMiddleware#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "googleapis": "^23.0.0"
   }
 }
