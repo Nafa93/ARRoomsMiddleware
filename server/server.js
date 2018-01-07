@@ -1,6 +1,6 @@
 const express = require('express')
 const google = require('googleapis')
-const {getAccessToken, oauth2Client, url} = require('./google/authentication')
+const {getAccessToken, oauth2Client, url} = require('../google/authentication')
 
 var calendar = google.calendar({version: 'v3'})
 
