@@ -46,7 +46,7 @@ var port = 3001
 app.get('/test', (req, res) => {
   getAccessToken(oauth2Client, function () {
     // retrieve user profile
-    calendar.calendarList.get({ calendarId: encodeURIComponent('nicolasfernandez93@gmail.com'), auth: oauth2Client }, function (err, response) {
+    calendar.events.list({ calendarId: encodeURIComponent('namorosino@solstice.com'), auth: oauth2Client }, function (err, response) {
       if (err) {
         return console.log('An error occured', err)
       }
