@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "node --inspect --debug-brk server/server.js"    
+    "debug": "node --inspect --debug-brk server/server.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Onisoroma/ARRoomsMiddleware#readme",
   "dependencies": {
     "express": "^4.16.2",
-    "googleapis": "^23.0.0"
+    "googleapis": "^23.0.0",
+    "moment": "^2.20.1"
   }
 }

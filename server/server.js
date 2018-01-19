@@ -1,11 +1,11 @@
 
 const express = require('express')
 const google = require('googleapis')
+const moment = require('moment')
 const calendar = google.calendar({version: 'v3'})
 var key = require('../jwt.keys.json')
-var currentDate = new Date()
-var todayStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0).toISOString()
-var todayEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 59).toISOString()
+var todayStart = moment().hour(0).minute(0).second(0).format()
+var todayEnd = moment().hour(23).minute(59).second(59).format()
 
 var jwtClient = new google.auth.JWT(
   key.client_email,
