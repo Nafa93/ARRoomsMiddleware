@@ -4,8 +4,8 @@ const google = require('googleapis')
 const calendar = google.calendar({version: 'v3'})
 var key = require('../jwt.keys.json')
 var currentDate = new Date()
-var todayStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0)
-var todayEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 59)
+var todayStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0).toISOString()
+var todayEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 59).toISOString()
 
 var jwtClient = new google.auth.JWT(
   key.client_email,
@@ -19,12 +19,14 @@ var app = express()
 
 var port = 3001
 
-app.get('/events', (req, res) => {
+app.get('/events/today/:calendarId', (req, res) => {
+  var _calendarId = req.params.calendarId
+
   jwtClient.authorize(function (err, tokens) {
     if (err) {
       console.log(err)
     } else {
-      calendar.events.list({ calendarId: 'solstice.com_3238353635363032333337@resource.calendar.google.com', auth: jwtClient, timeMin: todayStart.toISOString(), timeMax: todayEnd.toISOString() }, function (err, response) {
+      calendar.events.list({ calendarId: _calendarId, auth: jwtClient, timeMin: todayStart, timeMax: todayEnd }, function (err, response) {
         var customResponse = {
           items: response.items ? response.items : null,
           message: '',

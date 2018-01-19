@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "node --inspect --debug-brk server/serverApiKey.js"    
+    "debug": "node --inspect --debug-brk server/server.js"    
   },
   "repository": {
     "type": "git",
