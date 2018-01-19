@@ -26,22 +26,29 @@ app.get('/events/today/:calendarId', (req, res) => {
     if (err) {
       console.log(err)
     } else {
-      calendar.events.list({ calendarId: _calendarId, auth: jwtClient, timeMin: todayStart, timeMax: todayEnd }, function (err, response) {
-        var customResponse = {
-          items: response.items ? response.items : null,
-          message: '',
-          err
-        }
-        if (err) {
-          res.status(400).send(customResponse)
-        } else if (response.items.length > 0) {
-          customResponse.message = `There are ${response.items.length} events in this room`
-          res.status(200).send(customResponse)
-        } else {
-          customResponse.message = 'There are no events today'
-          res.status(200).send(customResponse)
-        }
-      })
+      calendar.events.list(
+        { calendarId: _calendarId,
+          auth: jwtClient,
+          timeMin: todayStart,
+          timeMax: todayEnd,
+          singleEvents: true
+        },
+        function (err, response) {
+          var customResponse = {
+            items: response.items ? response.items : null,
+            message: '',
+            err
+          }
+          if (err) {
+            res.status(400).send(customResponse)
+          } else if (response.items.length > 0) {
+            customResponse.message = `There are ${response.items.length} events in this room`
+            res.status(200).send(customResponse)
+          } else {
+            customResponse.message = 'There are no events today'
+            res.status(200).send(customResponse)
+          }
+        })
     }
   })
 })
