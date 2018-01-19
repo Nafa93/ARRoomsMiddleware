@@ -1,57 +1,46 @@
 
 const express = require('express')
-var google = require('googleapis')
-var OAuth2 = google.auth.OAuth2
-var readline = require('readline')
+const google = require('googleapis')
+const calendar = google.calendar({version: 'v3'})
+var key = require('../jwt.keys.json')
+var currentDate = new Date()
+var todayStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0)
+var todayEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 59)
 
-var clientSecret = 'A0JzbPxlHFJhdJ069IQgbcIM'
-var clientId = '153639822975-ik5n1tlshg91mvuo4lqcuhhkm18asqn7.apps.googleusercontent.com'
-var redirectUrl = 'http://localhost:8081'
-
-var oauth2Client = new OAuth2(clientId, clientSecret, redirectUrl)
-
-var rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-})
-
-function getAccessToken (oauth2Client, callback) {
-  // generate consent page url
-  var url = oauth2Client.generateAuthUrl({
-    // access_type: 'online', // will return a refresh token
-    scope: 'https://www.googleapis.com/auth/calendar' // can be a space-delimited string or an array of scopes
-  })
-
-  console.log('Visit the url: ', url)
-  rl.question('Enter the code here:', function (code) {
-    // request access token
-    oauth2Client.getToken(code, function (err, tokens) {
-      if (err) {
-        return callback(err)
-      }
-      // set tokens to the client
-      // TODO: tokens should be set by OAuth2 client.
-      oauth2Client.credentials = tokens
-      callback()
-    })
-  })
-}
-
-var calendar = google.calendar({version: 'v3'})
+var jwtClient = new google.auth.JWT(
+  key.client_email,
+  null,
+  key.private_key,
+  ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
+  null
+)
 
 var app = express()
 
 var port = 3001
 
-app.get('/test', (req, res) => {
-  getAccessToken(oauth2Client, function () {
-    // retrieve user profile
-    calendar.events.list({ calendarId: encodeURIComponent('namorosino@solstice.com'), auth: oauth2Client }, function (err, response) {
-      if (err) {
-        return console.log('An error occured', err)
-      }
-      console.log(response)
-    })
+app.get('/events', (req, res) => {
+  jwtClient.authorize(function (err, tokens) {
+    if (err) {
+      console.log(err)
+    } else {
+      calendar.events.list({ calendarId: 'solstice.com_3238353635363032333337@resource.calendar.google.com', auth: jwtClient, timeMin: todayStart.toISOString(), timeMax: todayEnd.toISOString() }, function (err, response) {
+        var customResponse = {
+          items: response.items ? response.items : null,
+          message: '',
+          err
+        }
+        if (err) {
+          res.status(400).send(customResponse)
+        } else if (response.items.length > 0) {
+          customResponse.message = `There are ${response.items.length} events in this room`
+          res.status(200).send(customResponse)
+        } else {
+          customResponse.message = 'There are no events today'
+          res.status(200).send(customResponse)
+        }
+      })
+    }
   })
 })
 
