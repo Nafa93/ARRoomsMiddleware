@@ -13,7 +13,7 @@ var timeMax = moment().hour(23).minute(59).second(59).format()
 var jwtClient = new google.auth.JWT(
   process.env.client_email,
   null,
-  process.env.private_key,
+  JSON.parse(process.env.private_key),
   ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
   null
 )
