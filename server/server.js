@@ -4,8 +4,8 @@ const google = require('googleapis')
 const moment = require('moment')
 const calendar = google.calendar({version: 'v3'})
 var key = require('../jwt.keys.json')
-var todayStart = moment().hour(0).minute(0).second(0).format()
-var todayEnd = moment().hour(23).minute(59).second(59).format()
+var timeMin = moment().hour(0).minute(0).second(0).format()
+var timeMax = moment().hour(23).minute(59).second(59).format()
 
 var jwtClient = new google.auth.JWT(
   key.client_email,
@@ -20,17 +20,17 @@ var app = express()
 var port = 3001
 
 app.get('/events/today/:calendarId', (req, res) => {
-  var _calendarId = req.params.calendarId
+  var calendarId = req.params.calendarId
 
   jwtClient.authorize(function (err, tokens) {
     if (err) {
       console.log(err)
     } else {
       calendar.events.list(
-        { calendarId: _calendarId,
+        { calendarId,
           auth: jwtClient,
-          timeMin: todayStart,
-          timeMax: todayEnd,
+          timeMin,
+          timeMax,
           singleEvents: true
         },
         function (err, response) {
