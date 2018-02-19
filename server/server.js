@@ -63,6 +63,7 @@ app.get('/events/today/:calendarId', (req, res) => {
 app.listen(port, () => {
   if (port) {
     console.log(`Started up at port ${port}`)
+    console.log(process.env)
   } else {
     console.log('The application started')
   }
