@@ -3,12 +3,12 @@ const express = require('express')
 const google = require('googleapis')
 const moment = require('moment')
 const calendar = google.calendar({version: 'v3'})
-var key = require('../jwt.keys.json')
+// var key = require('../jwt.keys.json')
 var timeMin = moment().hour(0).minute(0).second(0).format()
 var timeMax = moment().hour(23).minute(59).second(59).format()
 
-process.env.client_email = key.client_email
-process.env.private_key = key.private_key
+// process.env.client_email = key.client_email
+// process.env.private_key = key.private_key
 
 var jwtClient = new google.auth.JWT(
   process.env.client_email,
