@@ -17,7 +17,7 @@ var timeMax = moment().hour(23).minute(59).second(59).format()
 
 var app = express()
 
-var port = 3001
+var port = process.env.PORT || 3001
 
 app.get('/env', (req, res) => {
   res.send({
@@ -63,7 +63,6 @@ app.get('/events/today/:calendarId', (req, res) => {
 app.listen(port, () => {
   if (port) {
     console.log(`Started up at port ${port}`)
-    console.log(process)
   } else {
     console.log('The application started')
   }
