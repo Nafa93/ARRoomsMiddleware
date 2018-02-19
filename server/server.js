@@ -7,13 +7,13 @@ const calendar = google.calendar({version: 'v3'})
 var timeMin = moment().hour(0).minute(0).second(0).format()
 var timeMax = moment().hour(23).minute(59).second(59).format()
 
-// var jwtClient = new google.auth.JWT(
-//   key.client_email,
-//   null,
-//   key.private_key,
-//   ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
-//   null
-// )
+var jwtClient = new google.auth.JWT(
+  process.env.client_email,
+  null,
+  process.env.private_key,
+  ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
+  null
+)
 
 var app = express()
 
