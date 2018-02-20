@@ -58,16 +58,16 @@ app.get('/events/now/:calendarId', (req, res) => {
         function (err, response) {
           var customResponse = {
             items: response.items ? response.items : null,
-            message: '',
+            isFree: null,
             err
           }
           if (err) {
             res.status(400).send(customResponse)
           } else if (response.items.length > 0) {
-            customResponse.message = `Busy`
+            customResponse.isFree = false
             res.status(200).send(customResponse)
           } else {
-            customResponse.message = 'Free'
+            customResponse.isFree = true
             res.status(200).send(customResponse)
           }
         })
