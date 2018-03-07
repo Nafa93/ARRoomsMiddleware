@@ -20,8 +20,10 @@
   },
   "homepage": "https://github.com/Onisoroma/ARRoomsMiddleware#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "googleapis": "^23.0.0",
+    "lodash": "^4.17.5",
     "moment": "^2.20.1"
   }
 }
