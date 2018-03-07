@@ -52,8 +52,14 @@ app.post('/setToken', (req, res) => {
     // const domain = payload['hd'];
     console.log(`This is the payload: ${payload}`)
     console.log(`This is the userid: ${userid}`)
+    // res.send({
+    //   payload,
+    //   userid
+    // })
   }
-  verify().catch((e) => {
+  verify().then((response) => {
+    res.send(response)
+  }).catch((e) => {
     res.send(e)
   })
 })
