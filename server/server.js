@@ -3,7 +3,7 @@ const express = require('express')
 const google = require('googleapis')
 const moment = require('moment')
 const calendar = google.calendar({version: 'v3'})
-// const OAuth2 = google.auth.OAuth2
+const OAuth2 = google.auth.OAuth2
 
 // var oauth2Client = new OAuth2()
 
@@ -36,10 +36,23 @@ var port = process.env.PORT || 3001
 
 app.get('/setToken', (req, res) => {
   // oauth2Client.setCredentials()
-  console.log(req.body)
-  res.send({
-    message: 'everything fine!'
-  })
+  const client = new OAuth2(req.body.clientId)
+  async function verify () {
+    const ticket = await client.verifyIdToken({
+      idToken: req.body.userid,
+      audience: req.body.clientId
+      // Specify the CLIENT_ID of the app that accesses the backend
+      // Or, if multiple clients access the backend:
+      // [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+    })
+    const payload = ticket.getPayload()
+    const userid = payload['sub']
+    // If request specified a G Suite domain:
+    // const domain = payload['hd'];
+    console.log(payload)
+    console.log(userid)
+  }
+  verify().catch(console.error);
 })
 
 app.get('/events/now/:calendarId', (req, res) => {
