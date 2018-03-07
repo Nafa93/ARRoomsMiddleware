@@ -11,13 +11,13 @@ const OAuth2 = google.auth.OAuth2
 
 var timeMin, timeMax
 
-var jwtClient = new google.auth.JWT(
-  process.env.client_email,
-  null,
-  JSON.parse(process.env.private_key),
-  ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
-  null
-)
+// var jwtClient = new google.auth.JWT(
+//   process.env.client_email,
+//   null,
+//   JSON.parse(process.env.private_key),
+//   ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
+//   null
+// )
 
 // var jwtClient = new google.auth.JWT(
 //   key.client_email,
@@ -32,6 +32,17 @@ var app = express()
 app.use(bodyParser.json())
 
 var port = process.env.PORT || 3001
+
+if (port === 3001) {
+  var key = require('../jwt.keys.json')
+  createJWTClient(key.client_email, key.private_key, ['https://www.googleapis.com/auth/calendar'])
+} else {
+  createJWTClient(process.env.client_email, process.env.private_key, ['https://www.googleapis.com/auth/calendar'])
+}
+
+function createJWTClient (email, key, scopes) {
+  return new google.auth.JWT(email, null, key, scopes, null)
+}
 
 app.post('/setToken', (req, res) => {
   // const client = new OAuth2(req.body.clientId)
