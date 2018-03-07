@@ -7,30 +7,28 @@ const bodyParser = require('body-parser')
 const calendar = google.calendar({version: 'v3'})
 const OAuth2 = google.auth.OAuth2
 
-// var oauth2Client = new OAuth2()
-
-var key = require('../jwt.keys.json')
+// var key = require('../jwt.keys.json')
 
 var timeMin, timeMax
 
 // process.env.client_email = key.client_email
 // process.env.private_key = key.private_key
 
-// var jwtClient = new google.auth.JWT(
-//   process.env.client_email,
-//   null,
-//   JSON.parse(process.env.private_key),
-//   ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
-//   null
-// )
-
 var jwtClient = new google.auth.JWT(
-  key.client_email,
+  process.env.client_email,
   null,
-  key.private_key,
+  JSON.parse(process.env.private_key),
   ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
   null
 )
+
+// var jwtClient = new google.auth.JWT(
+//   key.client_email,
+//   null,
+//   key.private_key,
+//   ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
+//   null
+// )
 
 var app = express()
 
