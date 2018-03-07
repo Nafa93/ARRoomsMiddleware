@@ -57,7 +57,9 @@ app.post('/setToken', (req, res) => {
     console.log(payload)
     console.log(userid)
   }
-  verify().catch(res.send(console.error))
+  verify().catch((e) => {
+    res.send(e)
+  })
 })
 
 app.get('/events/now/:calendarId', (req, res) => {
