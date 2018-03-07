@@ -3,6 +3,10 @@ const express = require('express')
 const google = require('googleapis')
 const moment = require('moment')
 const calendar = google.calendar({version: 'v3'})
+// const OAuth2 = google.auth.OAuth2
+
+// var oauth2Client = new OAuth2()
+
 // var key = require('../jwt.keys.json')
 
 var timeMin, timeMax
@@ -30,11 +34,11 @@ var app = express()
 
 var port = process.env.PORT || 3001
 
-app.get('/env', (req, res) => {
+app.get('/setToken', (req, res) => {
+  // oauth2Client.setCredentials()
+  console.log(req.body)
   res.send({
-    'response': process.env,
-    'message': 'success',
-    jwtClient
+    message: 'everything fine!'
   })
 })
 
@@ -76,7 +80,6 @@ app.get('/events/now/:calendarId', (req, res) => {
 })
 
 app.get('/events/today/:calendarId', (req, res) => {
-
   timeMin = moment().hour(0).minute(0).second(0).format()
   timeMax = moment().hour(23).minute(59).second(59).format()
 
