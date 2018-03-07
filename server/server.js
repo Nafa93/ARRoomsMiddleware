@@ -70,7 +70,7 @@ app.post('/setToken', (req, res) => {
   // }).catch((e) => {
   //   res.send(e)
   // })
-  console.log(req.body)
+  console.log(`This is the body: ${req.body}`)
 })
 
 app.get('/events/now/:calendarId', (req, res) => {
