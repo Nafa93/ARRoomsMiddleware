@@ -7,28 +7,28 @@ const bodyParser = require('body-parser')
 const calendar = google.calendar({version: 'v3'})
 const OAuth2 = google.auth.OAuth2
 
-// var key = require('../jwt.keys.json')
+var key = require('../jwt.keys.json')
 
 var timeMin, timeMax
 
 // process.env.client_email = key.client_email
 // process.env.private_key = key.private_key
 
-var jwtClient = new google.auth.JWT(
-  process.env.client_email,
-  null,
-  JSON.parse(process.env.private_key),
-  ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
-  null
-)
-
 // var jwtClient = new google.auth.JWT(
-//   key.client_email,
+//   process.env.client_email,
 //   null,
-//   key.private_key,
+//   JSON.parse(process.env.private_key),
 //   ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
 //   null
 // )
+
+var jwtClient = new google.auth.JWT(
+  key.client_email,
+  null,
+  key.private_key,
+  ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
+  null
+)
 
 var app = express()
 
@@ -38,8 +38,8 @@ var port = process.env.PORT || 3001
 
 app.post('/setToken', (req, res) => {
   const client = new OAuth2(req.body.clientId)
-  async function verify () {
-    const ticket = await client.verifyIdToken({
+  function verify () {
+    const ticket = client.verifyIdToken({
       idToken: req.body.userid,
       audience: req.body.clientId
       // Specify the CLIENT_ID of the app that accesses the backend
