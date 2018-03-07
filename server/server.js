@@ -37,8 +37,6 @@ app.use(bodyParser.json())
 var port = process.env.PORT || 3001
 
 app.post('/setToken', (req, res) => {
-  // oauth2Client.setCredentials()
-  console.log(req.body)
   const client = new OAuth2(req.body.clientId)
   async function verify () {
     const ticket = await client.verifyIdToken({
@@ -52,8 +50,8 @@ app.post('/setToken', (req, res) => {
     const userid = payload['sub']
     // If request specified a G Suite domain:
     // const domain = payload['hd'];
-    console.log(payload)
-    console.log(userid)
+    console.log(`This is the payload: ${payload}`)
+    console.log(`This is the userid: ${userid}`)
   }
   verify().catch((e) => {
     res.send(e)
