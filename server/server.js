@@ -44,7 +44,7 @@ if (port === 3001) {
   private_key = key.private_key
 } else {
   client_email = process.env.client_email
-  private_key = process.env.private_key
+  private_key = JSON.parse(process.env.private_key)
 }
 
 var jwtClient = createJWTClient(client_email, private_key, ['https://www.googleapis.com/auth/calendar'])
