@@ -35,12 +35,19 @@ app.use(bodyParser.json())
 
 var port = process.env.PORT || 3001
 
+var client_email = ''
+var private_key = ''
+
 if (port === 3001) {
   var key = require('../jwt.keys.json')
-  createJWTClient(key.client_email, key.private_key, ['https://www.googleapis.com/auth/calendar'])
+  client_email = key.client_email
+  private_key = key.private_key
 } else {
-  createJWTClient(process.env.client_email, process.env.private_key, ['https://www.googleapis.com/auth/calendar'])
+  client_email = process.env.client_email
+  private_key = process.env.private_key
 }
+
+var jwtClient = createJWTClient(client_email, private_key, ['https://www.googleapis.com/auth/calendar'])
 
 function createJWTClient (email, key, scopes) {
   return new google.auth.JWT(email, null, key, scopes, null)
