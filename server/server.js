@@ -1,17 +1,17 @@
 
-const express = require('express')
-const google = require('googleapis')
-const moment = require('moment')
-const _ = require('lodash')
-const bodyParser = require('body-parser')
-const calendar = google.calendar({version: 'v3'})
-const OAuth2 = google.auth.OAuth2
-const https = require('https')
-const {OAuth2Client} = require('google-auth-library')
+const express = require('express');
+const google = require('googleapis');
+const moment = require('moment');
+const _ = require('lodash');
+const bodyParser = require('body-parser');
+const calendar = google.calendar({version: 'v3'});
+const OAuth2 = google.auth.OAuth2;
+const https = require('https');
+const {OAuth2Client} = require('google-auth-library');
 
 // var key = require('../jwt.keys.json')
 
-var timeMin, timeMax
+var timeMin, timeMax;
 
 // var jwtClient = new google.auth.JWT(
 //   process.env.client_email,
@@ -29,28 +29,28 @@ var timeMin, timeMax
 //   null
 // )
 
-var app = express()
+var app = express();
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-var port = process.env.PORT || 3001
+var port = process.env.PORT || 3001;
 
-var client_email = ''
-var private_key = ''
+var client_email = '';
+var private_key = '';
 
 if (port === 3001) {
-  var key = require('../jwt.keys.json')
-  client_email = key.client_email
-  private_key = key.private_key
+  var key = require('../jwt.keys.json');
+  client_email = key.client_email;
+  private_key = key.private_key;
 } else {
-  client_email = process.env.client_email
-  private_key = JSON.parse(process.env.private_key)
+  client_email = process.env.client_email;
+  private_key = JSON.parse(process.env.private_key);
 }
 
-var jwtClient = createJWTClient(client_email, private_key, ['https://www.googleapis.com/auth/calendar'])
+var jwtClient = createJWTClient(client_email, private_key, ['https://www.googleapis.com/auth/calendar']);
 
 function createJWTClient (email, key, scopes) {
-  return new google.auth.JWT(email, null, key, scopes, null)
+  return new google.auth.JWT(email, null, key, scopes, null);
 }
 
 app.post('/setToken', (req, res) => {
@@ -73,7 +73,7 @@ app.post('/setToken', (req, res) => {
   //   res.send(e)
   // })
 
-  var oauth2Client = new OAuth2(req.body.client_id)
+  var oauth2Client = new OAuth2(req.body.client_id);
   calendar.events.list(
     { calendarId: 'solstice.com_2d33373835393738342d313133@resource.calendar.google.com',
       auth: oauth2Client,
@@ -86,29 +86,29 @@ app.post('/setToken', (req, res) => {
         items: response.items ? response.items : null,
         isFree: null,
         err
-      }
+      };
       if (err) {
-        res.status(400).send(customResponse)
+        res.status(400).send(customResponse);
       } else if (response.items.length > 0) {
-        customResponse.isFree = false
-        res.status(200).send(customResponse)
+        customResponse.isFree = false;
+        res.status(200).send(customResponse);
       } else {
-        customResponse.isFree = true
-        res.status(200).send(customResponse)
+        customResponse.isFree = true;
+        res.status(200).send(customResponse);
       }
     }
-  )
-})
+  );
+});
 
 app.get('/events/now/:calendarId', (req, res) => {
-  timeMin = moment().second(0).format()
-  timeMax = moment().second(1).format()
+  timeMin = moment().second(0).format();
+  timeMax = moment().second(1).format();
 
-  var calendarId = req.params.calendarId
+  var calendarId = req.params.calendarId;
 
   jwtClient.authorize(function (err, tokens) {
     if (err) {
-      console.log(err)
+      console.log(err);
     } else {
       calendar.events.list(
         { calendarId,
@@ -122,30 +122,30 @@ app.get('/events/now/:calendarId', (req, res) => {
             items: response.items ? response.items : null,
             isFree: null,
             err
-          }
+          };
           if (err) {
-            res.status(400).send(customResponse)
+            res.status(400).send(customResponse);
           } else if (response.items.length > 0) {
-            customResponse.isFree = false
-            res.status(200).send(customResponse)
+            customResponse.isFree = false;
+            res.status(200).send(customResponse);
           } else {
-            customResponse.isFree = true
-            res.status(200).send(customResponse)
+            customResponse.isFree = true;
+            res.status(200).send(customResponse);
           }
-        })
+        });
     }
-  })
-})
+  });
+});
 
 app.get('/events/today/:calendarId', (req, res) => {
-  timeMin = moment().hour(0).minute(0).second(0).format()
-  timeMax = moment().hour(23).minute(59).second(59).format()
+  timeMin = moment().hour(0).minute(0).second(0).format();
+  timeMax = moment().hour(23).minute(59).second(59).format();
 
-  var calendarId = req.params.calendarId
+  var calendarId = req.params.calendarId;
 
   jwtClient.authorize(function (err, tokens) {
     if (err) {
-      console.log(err)
+      console.log(err);
     } else {
       calendar.events.list(
         { calendarId,
@@ -159,27 +159,27 @@ app.get('/events/today/:calendarId', (req, res) => {
             items: response.items ? response.items : null,
             message: '',
             err
-          }
+          };
           if (err) {
-            res.status(400).send(customResponse)
+            res.status(400).send(customResponse);
           } else if (response.items.length > 0) {
-            customResponse.message = `There are ${response.items.length} events in this room`
-            res.status(200).send(customResponse)
+            customResponse.message = `There are ${response.items.length} events in this room`;
+            res.status(200).send(customResponse);
           } else {
-            customResponse.message = 'There are no events today'
-            res.status(200).send(customResponse)
+            customResponse.message = 'There are no events today';
+            res.status(200).send(customResponse);
           }
-        })
+        });
     }
-  })
-})
+  });
+});
 
 app.listen(port, () => {
   if (port) {
-    console.log(`Started up at port ${port}`)
+    console.log(`Started up at port ${port}`);
   } else {
-    console.log('The application started')
+    console.log('The application started');
   }
-})
+});
 
-module.exports = { app }
+module.exports = { app };
