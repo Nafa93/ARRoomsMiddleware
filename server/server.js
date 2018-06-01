@@ -7,27 +7,9 @@ const bodyParser = require('body-parser');
 const calendar = google.calendar({version: 'v3'});
 const OAuth2 = google.auth.OAuth2;
 const https = require('https');
-const {OAuth2Client} = require('google-auth-library');
-
-// var key = require('../jwt.keys.json')
+const verifyToken = require('');
 
 var timeMin, timeMax;
-
-// var jwtClient = new google.auth.JWT(
-//   process.env.client_email,
-//   null,
-//   JSON.parse(process.env.private_key),
-//   ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
-//   null
-// )
-
-// var jwtClient = new google.auth.JWT(
-//   key.client_email,
-//   null,
-//   key.private_key,
-//   ['https://www.googleapis.com/auth/calendar'], // an array of auth scopes
-//   null
-// )
 
 var app = express();
 
@@ -53,52 +35,24 @@ function createJWTClient (email, key, scopes) {
   return new google.auth.JWT(email, null, key, scopes, null);
 }
 
-app.post('/setToken', (req, res) => {
-  // const client = new OAuth2Client(req.body.client_id)
-  // async function verify (idToken, audience) {
-  //   const ticket = await client.verifyIdToken({
-  //     idToken,
-  //     audience
-  //     // Specify the CLIENT_ID of the app that accesses the backend
-  //     // Or, if multiple clients access the backend:
-  //     // [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-  //   }, (error, ticket) => {
-  //     const payload = ticket.getPayload()
-  //     const userid = payload['sub']
-  //     console.log(`This is the payload: ${payload}`)
-  //     console.log(`This is the userid: ${userid}`)
-  //   })
-  // }
-  // verify(req.body.token, req.body.client_id).catch((e) => {
-  //   res.send(e)
-  // })
-
-  var oauth2Client = new OAuth2(req.body.client_id);
-  calendar.events.list(
-    { calendarId: 'solstice.com_2d33373835393738342d313133@resource.calendar.google.com',
-      auth: oauth2Client,
-      timeMin,
-      timeMax,
-      singleEvents: true
-    },
-    function (err, response) {
-      var customResponse = {
-        items: response.items ? response.items : null,
-        isFree: null,
-        err
-      };
-      if (err) {
-        res.status(400).send(customResponse);
-      } else if (response.items.length > 0) {
-        customResponse.isFree = false;
-        res.status(200).send(customResponse);
-      } else {
-        customResponse.isFree = true;
-        res.status(200).send(customResponse);
-      }
-    }
-  );
-});
+// app.post('/verifyToken', (req, res) => {
+//   const client = new OAuth2Client(req.body.client_id);
+//   /* jshint ignore:start */
+//   async function verify() {
+//     const ticket = await client.verifyIdToken({
+//         idToken: req.body.token,
+//         audience: req.body.client_id,  // Specify the CLIENT_ID of the app that accesses the backend
+//         // Or, if multiple clients access the backend:
+//         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+//     });
+//     const payload = ticket.getPayload();
+//     const userid = payload.sub;
+//     // If request specified a G Suite domain:
+//     const domain = payload.hd;
+//   }
+//   verify().catch(console.error);
+//   /* jshint ignore:end */
+// });
 
 app.get('/events/now/:calendarId', (req, res) => {
   timeMin = moment().second(0).format();

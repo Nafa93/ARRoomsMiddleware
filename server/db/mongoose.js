@@ -10,4 +10,4 @@ mongoose.connect(process.env.MONGODB_URI, {
   console.log(`The connection to the DB couldn't be established`);
 });
 
-module.exports = {mongoose};
+module.exports = { mongoose };
