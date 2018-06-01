@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const calendar = google.calendar({version: 'v3'});
 const OAuth2 = google.auth.OAuth2;
 const https = require('https');
-const verifyToken = require('');
 
 var timeMin, timeMax;
 
